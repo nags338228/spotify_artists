@@ -7,7 +7,7 @@ detailed artist pages for logged-in users.
 
 ## REQUIREMENTS
 This module requires the following:
-* Drupal 10
+* Drupal 10/11
 * A Spotify Developer account with API credentials
 
 ## INSTALLATION
