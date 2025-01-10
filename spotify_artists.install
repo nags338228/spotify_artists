@@ -1,0 +1,48 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the Spotify Artists module.
+ */
+
+ /**
+ * Implements hook_install().
+ */
+function spotify_artists_install() {
+  // Create a custom block instance
+  $block = \Drupal\block\Entity\Block::create([
+    'id' => 'spotify_artists_block', 
+    'theme' => \Drupal::config('system.theme')->get('default'),
+    'plugin' => 'spotify_artists_block',
+    'region' => 'content',
+    'settings' => [
+      'label' => 'Spotify Artists',
+      'visibility' => [
+        'request_path' => [
+          'id' => 'request_path',
+          'pages' => '/spotify-artists',
+          'negate' => FALSE,
+        ],
+        'user_role' => [
+          'id' => 'user_role',
+          'roles' => ['authenticated'],
+          'negate' => FALSE,
+        ],
+      ],
+    ],
+  ]);
+  $block->save();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function spotify_artists_uninstall() {
+  // Load and delete the block.
+  $block = \Drupal\block\Entity\Block::load('spotify_artists_block');
+  if ($block) {
+    $block->delete();
+  }
+  
+  // Delete module configuration.
+  \Drupal::configFactory()->getEditable('spotify_artists.settings')->delete();
+}

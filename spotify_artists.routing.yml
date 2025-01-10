@@ -1,0 +1,23 @@
+spotify_artists.settings:
+  path: '/admin/config/services/spotify-artists'
+  defaults:
+    _form: '\Drupal\spotify_artists\Form\SpotifyArtistsSettingsForm'
+    _title: 'Spotify Artists Settings'
+  requirements:
+    _permission: 'administer spotify artists'
+
+spotify_artists.artist:
+  path: '/artist/{artist_id}'
+  defaults:
+    _controller: '\Drupal\spotify_artists\Controller\ArtistController::view'
+    _title_callback: '\Drupal\spotify_artists\Controller\ArtistController::title'
+  requirements:
+    _user_is_logged_in: 'TRUE'
+
+spotify_artists.page:
+  path: '/spotify-artists'
+  defaults:
+    _controller: '\Drupal\spotify_artists\Controller\ArtistController::listPage'
+    _title: 'Spotify Artists'
+  requirements:
+    _user_is_logged_in: 'TRUE'

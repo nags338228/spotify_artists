@@ -1,0 +1,13 @@
+{% if artists %}
+  <ul>
+    {% for artist in artists %}
+      <li>
+        {% if logged_in %}
+          <a href="{{ path('spotify_artists.artist', {'artist_id': artist.id}) }}">{{ artist.name }}</a>
+        {% else %}
+          {{ artist.name }}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}

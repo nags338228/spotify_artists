@@ -1,0 +1,75 @@
+<?php
+
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_theme().
+ */
+function spotify_artists_theme($existing, $type, $theme, $path) {
+  return [
+    'spotify_artists_block' => [
+      'variables' => [
+        'artists' => [],
+      ],
+    ],
+    'spotify_artist' => [
+      'variables' => [
+        'artist' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function spotify_artists_page_attachments(array &$attachments) {
+  if (\Drupal::currentUser()->hasPermission('administer site configuration')) {
+    $config = \Drupal::config('spotify_artists.settings');
+    $client_id = $config->get('spotify_client_id');
+    $client_secret = $config->get('spotify_client_secret');
+
+    // If settings are missing, display an error message.
+    if (empty($client_id) || empty($client_secret)) {
+      $url = Url::fromRoute('spotify_artists.settings')->toString();
+      \Drupal::messenger()->addWarning(
+        t('The Spotify Artist Block module is not fully configured. Please set the Client ID and Secret Key in <a href=":url">module settings</a>.', [
+          ':url' => $url,
+        ])
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function spotify_artists_requirements($phase) {
+  $requirements = [];
+
+  // Only check during the runtime phase.
+  if ($phase == 'runtime') {
+    $config = \Drupal::config('spotify_artists.settings');
+    $client_id = $config->get('spotify_client_id');
+    $client_secret = $config->get('spotify_client_secret');
+
+    // Check if the Client ID and Secret are configured.
+    if (empty($client_id) || empty($client_secret)) {
+      $requirements['spotify_artists_config'] = [
+        'title' => t('Spotify Artist Block Configuration'),
+        'value' => t('Not configured'),
+        'description' => t('The Spotify Client ID and Secret Key are not configured. Please set them in the module settings.'),
+        'severity' => REQUIREMENT_ERROR, // This will show as an error on the status page.
+      ];
+    } else {
+      $requirements['spotify_artists_config'] = [
+        'title' => t('Spotify Artist Block Configuration'),
+        'value' => t('Configured'),
+        'description' => t('The Spotify Client ID and Secret Key are properly configured.'),
+        'severity' => REQUIREMENT_OK,
+      ];
+    }
+  }
+
+  return $requirements;
+}

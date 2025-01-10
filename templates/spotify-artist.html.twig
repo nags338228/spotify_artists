@@ -1,0 +1,25 @@
+<article class="spotify-artist">
+  {# 
+    Render the Spotify artist block. This template is responsible for displaying:
+    - The artist's primary image (if available).
+    - A list of genres associated with the artist (if available).
+  #}
+  
+  {# <h1>{{ artist.name }}</h1> #}
+
+  {# Check if the artist has images available and display the first image #}
+  {% if artist.images|length > 0 %}
+    <img src="{{ artist.images.0.url }}" alt="{{ artist.name }}" />
+  {% endif %}
+
+  {# Check if the artist has genres associated and display them in a list #}
+  {% if artist.genres|length > 0 %}
+    <h2>{{ 'Genres'|t }}</h2>
+    <ul>
+      {# Loop through each genre and render as a list item #}
+      {% for genre in artist.genres %}
+        <li>{{ genre }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</article>
